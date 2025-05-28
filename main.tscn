@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://buwkcdeserqtv"]
+
+[ext_resource type="Texture2D" uid="uid://bd4oohqecv637" path="res://background.png" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://uliuvmxguo2d" path="res://main.gd" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://djq7snm1n4j5s" path="res://Player.tscn" id="1_ig7tw"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_0xm2m"]
+b = Vector2(720, -0.00260639)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_h2yge"]
+b = Vector2(732, 0.997345)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_1bvp3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -1000
+texture_repeat = 2
+position = Vector2(52, -3)
+texture = ExtResource("1_0xm2m")
+region_enabled = true
+region_rect = Rect2(0, 0, 9000, 9000)
+
+[node name="Player" parent="." instance=ExtResource("1_ig7tw")]
+position = Vector2(151, 440)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="WorldBorderLeft" type="CollisionShape2D" parent="StaticBody2D"]
+rotation = 1.5708
+shape = SubResource("SegmentShape2D_0xm2m")
+
+[node name="WorldBorderRight" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(301, -4)
+rotation = 1.5708
+shape = SubResource("SegmentShape2D_h2yge")
+
+[node name="NormalEnemySpawn5" type="Marker2D" parent="."]
+position = Vector2(290, -25)
+
+[node name="NormalEnemySpawn4" type="Marker2D" parent="."]
+position = Vector2(220, -25)
+
+[node name="NormalEnemySpawn3" type="Marker2D" parent="."]
+position = Vector2(150, -25)
+
+[node name="NormalEnemySpawn2" type="Marker2D" parent="."]
+position = Vector2(80, -25)
+
+[node name="NormalEnemySpawn" type="Marker2D" parent="."]
+position = Vector2(10, -25)
