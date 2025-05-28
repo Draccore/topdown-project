@@ -17,7 +17,8 @@ motion_mode = 1
 script = ExtResource("1_kpjcp")
 Speed = 300.0
 MaxHealth = 100.0
-Attack = 20.0
+Attack = 1.0
+HealthRegenInterval = 5.0
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 texture = ExtResource("2_kne1u")

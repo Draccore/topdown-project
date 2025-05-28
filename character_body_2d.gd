@@ -1,7 +1,8 @@
 extends CharacterBody2D
 
 @onready var hitbox = $hitbox
-@export var damage: float
+@export var base_damage: float = 10
+var damage: float = 10
 @export var speed: float
 var dir : float
 var spawnPos : Vector2

@@ -3,7 +3,6 @@ extends CharacterBody2D
 @onready var main = $".."
 @onready var projectile = load("res://playerbullet1.tscn")
 @onready var cooldown = $Timer
-@onready var hptext = $"../Label"
 @onready var hp_bar = $hpbar
 @onready var level_label = $"../LevelLabel"
 @onready var xp_label = $"../XPLabel"
@@ -12,11 +11,14 @@ extends CharacterBody2D
 @export var MaxHealth : float
 @export var Defence : float
 @export var Attack : float
+@export var HealthRegen: float = 2.0 # Amount healed per second
+@export var HealthRegenInterval: float = 1.0 # Seconds between regen ticks
+var regen_timer: float = 0.0
 
 var Health : float
 var Level: int = 1
 var XP: int = 0
-var XPToNext: int = 100
+var XPToNext: int = 50
 
 
 func _ready():
@@ -30,6 +32,14 @@ func _physics_process(delta):
 	velocity.x = direction * Speed
 	velocity.y = 0
 	move_and_slide()
+	
+	# Health regeneration
+	if Health < MaxHealth:
+		regen_timer += delta
+		if regen_timer >= HealthRegenInterval:
+			Health = min(Health + HealthRegen, MaxHealth)
+			hp_bar.set_health(Health, MaxHealth)
+			regen_timer = 0.0
 
 func add_xp(amount: int) -> void:
 	XP += amount
@@ -42,7 +52,9 @@ func level_up() -> void:
 	Level += 1
 	XPToNext = int(XPToNext * 1.2)
 	MaxHealth += 10
+	Attack += 0.2
 	Health = MaxHealth
+	HealthRegen += 1 # or any amount you like
 	hp_bar.set_health(Health, MaxHealth)
 	update_xp_display()
 	print("Level up! Now level %d" % Level)
@@ -61,6 +73,7 @@ func _spawn_projectile(offset: Vector2):
 	instance.dir = rotation
 	instance.spawnPos = spawn_point
 	instance.spawnRot = rotation
+	instance.damage = instance.base_damage * Attack  # <--- Multiplier
 	instance.zdex = z_index - 1
 	main.add_child.call_deferred(instance)
 

@@ -5,6 +5,7 @@ extends CharacterBody2D
 
 var spawnPos : Vector2
 var current_hp: float
+var is_dead = false
 
 @onready var projectile = load("res://enemy_laser_1.tscn")
 @onready var main = $".."
@@ -21,9 +22,9 @@ func _ready():
 func _physics_process(delta: float) -> void:
 	move_and_slide()
 
-
-
 func take_damage(damage):
+	if is_dead:
+		return
 	current_hp = current_hp - damage
 	print(current_hp)
 	if current_hp <= 0:
@@ -35,15 +36,16 @@ func shoot():
 	instance.spawnPos = global_position
 	instance.spawnRot = rotation
 	instance.zdex = z_index - 1
-	instance.damage = 30
+	instance.damage = 20
 	main.add_child.call_deferred(instance)
-
 
 func _on_timer_timeout() -> void:
 	shoot()
 	cooldown.start()
 
-
 func die():
+	if is_dead:
+		return
+	is_dead = true
 	emit_signal("enemy_died", xp_value)
 	queue_free()

@@ -5,7 +5,15 @@ var enemy_list = [
 	preload("res://blue_enemy.tscn")
 ]
 
-@onready var player_node = $PlayerRoot.get_child(Player)
+@onready var player_node = get_player_node()
+
+func get_player_node():
+	var player_root = $Player
+	for child in player_root.get_children():
+		if "add_xp" in child:
+			return child
+	push_error("Player node with add_xp not found!")
+	return null
 
 @onready var spawn_list = [
 	$NormalEnemySpawn,
