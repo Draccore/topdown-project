@@ -5,7 +5,7 @@ var enemy_list = [
 	preload("res://blue_enemy.tscn")
 ]
 
-@onready var player = $Player
+@onready var player_node = $PlayerRoot.get_child(Player)
 
 @onready var spawn_list = [
 	$NormalEnemySpawn,
@@ -47,7 +47,7 @@ func spawn_wave(enemy_indices: Array):
 			continue  # No enemy to spawn at this point
 		var enemy_scene = enemy_list[enemy_index]
 		var enemy_instance = enemy_scene.instantiate()
-		enemy_instance.enemy_died.connect(player.Player.add_xp)
+		enemy_instance.enemy_died.connect(player_node.add_xp)
 		add_child(enemy_instance)
 		enemy_instance.global_position = spawn_point.global_position
 		living_enemies.append(enemy_instance)
