@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://bf7pbd3en3sow" path="res://laserball.png" id="2_cj4ig"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b5l8w"]
-radius = 1.0
-height = 16.0
+radius = 53.0
+height = 106.0
 
 [node name="PlayerFollowBullet" type="CharacterBody2D"]
 motion_mode = 1
