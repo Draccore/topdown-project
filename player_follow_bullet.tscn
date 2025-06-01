@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://1e0bbnjue50s"]
+
+[ext_resource type="Script" uid="uid://dqcmu37vch4l5" path="res://player_follow_bullet.gd" id="1_cj4ig"]
+[ext_resource type="Texture2D" uid="uid://bf7pbd3en3sow" path="res://laserball.png" id="2_cj4ig"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b5l8w"]
+radius = 1.0
+height = 16.0
+
+[node name="PlayerFollowBullet" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_cj4ig")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-8, 0)
+scale = Vector2(1, 0.125)
+texture = ExtResource("2_cj4ig")
+centered = false
+
+[node name="Hitbox" type="Area2D" parent="Sprite2D"]
+position = Vector2(8, 8)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Hitbox"]
+shape = SubResource("CapsuleShape2D_b5l8w")

@@ -6,6 +6,7 @@ extends CharacterBody2D
 @onready var hp_bar = $hpbar
 @onready var level_label = $"../LevelLabel"
 @onready var xp_label = $"../XPLabel"
+@onready var laser_scene = load("res://player_follow_bullet.tscn")
 
 @export var Speed : float 
 @export var MaxHealth : float
@@ -13,12 +14,16 @@ extends CharacterBody2D
 @export var Attack : float
 @export var HealthRegen: float = 2.0 # Amount healed per second
 @export var HealthRegenInterval: float = 1.0 # Seconds between regen ticks
-var regen_timer: float = 0.0
 
+var regen_timer: float = 0.0
 var Health : float
 var Level: int = 1
 var XP: int = 0
 var XPToNext: int = 50
+var laser_active: bool = false
+var laser_segment_index: int = 0
+var segment_spacing: float = 0.5 # Match the height of playerlaser.png for perfect connection
+var laser_length: float = 600.0 # Total length of the laser in pixels
 
 
 func _ready():
@@ -27,12 +32,12 @@ func _ready():
 	Health = MaxHealth
 	hp_bar.set_health(Health, MaxHealth)
 
+
 func _physics_process(delta):
 	var direction := Input.get_axis("left","right")
 	velocity.x = direction * Speed
 	velocity.y = 0
 	move_and_slide()
-	
 	# Health regeneration
 	if Health < MaxHealth:
 		regen_timer += delta
@@ -40,6 +45,7 @@ func _physics_process(delta):
 			Health = min(Health + HealthRegen, MaxHealth)
 			hp_bar.set_health(Health, MaxHealth)
 			regen_timer = 0.0
+	# No need to spawn segments every frame anymore
 
 func add_xp(amount: int) -> void:
 	XP += amount
@@ -58,6 +64,8 @@ func level_up() -> void:
 	hp_bar.set_health(Health, MaxHealth)
 	update_xp_display()
 	print("Level up! Now level %d" % Level)
+	if Level == 2:
+		spawn_laser()
 
 func update_xp_display():
 	level_label.text = "Level: %d" % Level
@@ -86,3 +94,24 @@ func take_damage(damage):
 	hp_bar.set_health(Health, MaxHealth)
 	if Health <= 0:
 		queue_free()
+
+func spawn_laser():
+	laser_active = true
+	laser_segment_index = 0 # Reset when starting laser
+	# Spawn all segments instantly for a fully extended laser
+	var num_segments = int(laser_length / segment_spacing)
+	for i in range(num_segments):
+		var instance = laser_scene.instantiate()
+		instance.dir = rotation
+		instance.spawnPos = global_position
+		instance.spawnRot = rotation
+		instance.damage = instance.base_damage * Attack
+		instance.zdex = z_index - 1
+		instance.player = self
+		instance.distance_along_laser = i * segment_spacing
+		main.add_child(instance)
+	laser_segment_index = num_segments
+
+func remove_laser():
+	laser_active = false
+	laser_segment_index = 0 # Reset when stopping laser
