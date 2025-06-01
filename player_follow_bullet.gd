@@ -17,7 +17,7 @@ var slither_time: float = 0.0
 var age: float = 0.0
 var distance_along_laser: float = 0.0 # How far this segment is from the player
 
-@export var player: Node2D # Reference to the player node
+var player: Node2D # Reference to the player node
 var wave_speed: float = 2.0 # How fast the wave animates left/right
 
 # TIP: For best visual connection, use a rectangle or capsule sprite for the segment, not a circle.
